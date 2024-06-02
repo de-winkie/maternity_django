@@ -1,5 +1,6 @@
   import 'package:flutter/material.dart';
 import 'package:maternity/pages/login.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
   void main() {
     runApp(const MyApp());
@@ -12,14 +13,17 @@ import 'package:maternity/pages/login.dart';
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const Login(),
+     return ResponsiveSizer(
+      builder: (context, orientation, screenType) {
+        return MaterialApp(
+          title: 'Responsive Sizer Example',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home:const  Login(),
+        );
+      },
+      maxTabletWidth: 900, 
     );
   }
 }
