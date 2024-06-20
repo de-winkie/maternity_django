@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:maternity/constant.dart';
+import 'package:maternity/pages/menu.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -25,20 +26,31 @@ class _LoginState extends State<Login> {
         padding: EdgeInsets.only(
           left: 2.h,
           right: 2.h,
-          top: 10.h,
+          top: 16.h,
         ),
         child:
       Column(
         children: [
 Align(
-  alignment: Alignment.centerLeft,
-  child: Text('MMS',style: TextStyle(
+  alignment: Alignment.center,
+  child: Text('Sign in Now',style: TextStyle(
     // fontFamily: 
-    fontSize: 24.sp,
+    fontSize: 20.sp,
     fontWeight: FontWeight.w600,
   ),
    ),
 ),
+Align(
+  alignment: Alignment.center,
+  child: Text('Please Sign In To Continue Our App',style: TextStyle(
+    // fontFamily: 
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w600,
+    color: Colors.grey,
+  ),
+   ),
+),
+
 SizedBox(
   height: 2.h,
 ),
@@ -63,17 +75,19 @@ style: TextStyle(
  decoration: InputDecoration
  (
 enabledBorder: OutlineInputBorder(
-  borderSide: BorderSide(color: kGreySilverColor),
+  borderSide:const  BorderSide(color: kfilledColor),
+   borderRadius: BorderRadius.circular(1.h),
   gapPadding: 1.h,
   
 ),
 focusedBorder: OutlineInputBorder(
-  borderSide: const BorderSide(color: kGreySilverColor),
+  borderSide: const BorderSide(color: kfilledColor),
    gapPadding: 1.h,
+   borderRadius: BorderRadius.circular(1.h),
 ),
 hintText:'Enter Username' ,
-// filled: true,
-// fillColor: kfilledColor,
+filled: true,
+fillColor: kfilledColor,
 hintStyle:TextStyle(
   color: kGreySilverColor,
   fontSize: 14.sp,
@@ -105,22 +119,34 @@ style: TextStyle(
  decoration: InputDecoration
  (
 enabledBorder: OutlineInputBorder(
-  borderSide: BorderSide(color: kGreySilverColor),
+  borderSide:const  BorderSide(color: kfilledColor),
+   borderRadius: BorderRadius.circular(1.h),
   gapPadding: 1.h,
-  
 ),
 focusedBorder: OutlineInputBorder(
-  borderSide: const BorderSide(color: kGreySilverColor),
+  borderSide: const BorderSide(color: kfilledColor),
    gapPadding: 1.h,
+   borderRadius: BorderRadius.circular(1.h),
 ),
-hintText:'Enter Password' ,
-// filled: true,
-// fillColor: kfilledColor,
+hintText:'Enter Password?' ,
+filled: true,
+fillColor: kfilledColor,
 hintStyle:TextStyle(
   color: kGreySilverColor,
   fontSize: 14.sp,
 )
  )
+),
+SizedBox(height: 1.h,),
+ Align(
+  alignment: Alignment.centerRight,
+  child: Text('Forget Password',style: TextStyle(
+    // fontFamily: 
+    color: kPrimaryColor,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+  ),
+   ),
 ),
  SizedBox(
   height: 2.h,
@@ -131,11 +157,17 @@ hintStyle:TextStyle(
     height: 6.h,
     decoration:BoxDecoration(
       color: kPrimaryColor,
+      borderRadius: BorderRadius.circular(1.h)
 
 
     ) ,
-    child:TextButton(onPressed: () {},
-    child: Text('Login',style: TextStyle(color: kWhiteColor),),)   )   
+    child:TextButton(onPressed: () {
+      Navigator.push(context, MaterialPageRoute(builder: (_)=> const Menu()));
+      
+    },
+    child: Text('Sign In',style: TextStyle(color: kWhiteColor, fontSize:16.sp),
+   
+    ),),   )   
    ],
       )
       ),
