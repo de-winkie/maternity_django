@@ -41,8 +41,21 @@ class _LoginState extends State<Login> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      // Handle the response data, e.g., store the token
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const Menu()));
+      print(responseData);
+      
+      String token = responseData['access'];
+      int userId = responseData['id'];
+      String userName = responseData['username'];
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Menu(
+            token: token,
+            userId: userId,
+            userName: userName,
+          ),
+        ),
+      );
     } else {
       setState(() {
         errorMessage = 'Login failed. Please check your credentials and try again.';

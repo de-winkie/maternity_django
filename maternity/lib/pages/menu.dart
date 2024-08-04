@@ -5,7 +5,16 @@ import 'package:maternity/pages/schedule.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  final String token;
+  final int userId;
+  final String userName;
+
+  const Menu({
+    super.key,
+    required this.token,
+    required this.userId,
+    required this.userName,
+  });
 
   @override
   State<Menu> createState() => _MenuState();
@@ -13,12 +22,17 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   int _selectedIndex = 0;
+  late List<Widget> _widgetOptions;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    CalendarScreen(),
-    AppointmentScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      HomeScreen(userId: widget.userId),
+      CalendarScreen(),
+      AppointmentScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,24 +45,34 @@ class _MenuState extends State<Menu> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title:Container(
+        title: Container(
           width: 100.w,
-          padding: EdgeInsets.only(left:1.h, right:1.h),
+          padding: EdgeInsets.only(left: 0.h, right: 1.h),
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-              
-children: [
-  ClipOval(
-    child: Image.asset('assets/images/user.png',width: 14.w,height: 7.w),
-  ),
-  Text('Munawwar',style: TextStyle())
-],
-            ),
-              Icon(Icons.notifications)
+                children: [
+                 const  ClipOval(
+                    child:Icon(Icons.person)
+                    //  Image.asset(
+                    //   'assets/images/user.png',
+                    //   width: 14.w,
+                    //   height: 7.w,
+                    // ),
+                  ),
+                  SizedBox(width: 0.1.w),
+                  Text(
+                    widget.userName,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Icon(Icons.notifications),
             ],
-           
           ),
         ),
       ),
