@@ -1,8 +1,14 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, prefer_const_constructors, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:maternity/constant.dart';
 import 'dart:convert';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:intl/intl.dart';
+import 'package:printing/printing.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
 
 class ScheduleDetails extends StatefulWidget {
   final int scheduleId;
@@ -14,28 +20,29 @@ class ScheduleDetails extends StatefulWidget {
 
 class _ScheduleDetailsState extends State<ScheduleDetails> {
   String scheduleName = 'Loading...';
-  String scheduleImage = 'assets/images/munira.jpg'; // Placeholder image
+  String scheduleImage = 'assets/images/munira.jpg'; 
   List<dynamic> treatments = [];
+  String todayDate = '';
 
   @override
   void initState() {
     super.initState();
     fetchScheduleDetails();
+    todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Format today's date
   }
 
   Future<void> fetchScheduleDetails() async {
-    // Fetch schedule details
-    final scheduleResponse = await http.get(Uri.parse('$api/treatment/treatment-by-schedule/${widget.scheduleId}/'));
+    final scheduleResponse = await http.get(Uri.parse('$api/schedule/schedule-detail/${widget.scheduleId}/'));
     if (scheduleResponse.statusCode == 200) {
       final scheduleData = json.decode(scheduleResponse.body);
       setState(() {
-        scheduleName = scheduleData['name'] ?? 'No Name';
+        scheduleName = scheduleData['scheduleName'] ?? 'No Name';
         scheduleImage = scheduleData['image'] ?? scheduleImage;
       });
     }
 
     // Fetch treatments
-    final treatmentsResponse = await http.get(Uri.parse('http://your-api-url/treatments?scheduleId=${widget.scheduleId}'));
+    final treatmentsResponse = await http.get(Uri.parse('$api/treatment/treatment-by-schedule/${widget.scheduleId}/'));
     if (treatmentsResponse.statusCode == 200) {
       final treatmentsData = json.decode(treatmentsResponse.body);
       setState(() {
@@ -44,11 +51,60 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
     }
   }
 
+  Future<void> printReport() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text('Schedule Report', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 16),
+            pw.Text('Schedule Name: $scheduleName', style: pw.TextStyle(fontSize: 18)),
+            pw.Text('Date: $todayDate', style: pw.TextStyle(fontSize: 18)),
+            pw.SizedBox(height: 16),
+            pw.Text('Treatments:', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 8),
+            ...treatments.map((treatment) {
+              return pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 8),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Test Name: ${treatment['testName']}', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Amount: ${treatment['amount']}', style: pw.TextStyle(fontSize: 14)),
+                    pw.Text('Diagnosis: ${treatment['diagnosis']}', style: pw.TextStyle(fontSize: 14)),
+                    pw.Text('Description: ${treatment['description']}', style: pw.TextStyle(fontSize: 14)),
+                  ],
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+      );
+    } catch (e) {
+      print('Error printing report: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(scheduleName),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.print),
+            onPressed: printReport,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(1.h),
@@ -77,7 +133,7 @@ class _ScheduleDetailsState extends State<ScheduleDetails> {
                   Padding(
                     padding: EdgeInsets.all(1.6.h),
                     child: Text(
-                      'Schedule Information',
+                      'Today is: $todayDate',
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,

@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors, unused_import
+
 import 'package:flutter/material.dart';
 import 'package:maternity/pages/appointement.dart';
 import 'package:maternity/pages/home.dart';
 import 'package:maternity/pages/schedule.dart';
+import 'package:maternity/pages/schedule_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Menu extends StatefulWidget {
@@ -29,7 +32,7 @@ class _MenuState extends State<Menu> {
     super.initState();
     _widgetOptions = <Widget>[
       HomeScreen(userId: widget.userId),
-      CalendarScreen(),
+      ScheduleScreen(userId: widget.userId),
       AppointmentScreen(),
     ];
   }
@@ -54,12 +57,8 @@ class _MenuState extends State<Menu> {
               Row(
                 children: [
                  const  ClipOval(
-                    child:Icon(Icons.person)
-                    //  Image.asset(
-                    //   'assets/images/user.png',
-                    //   width: 14.w,
-                    //   height: 7.w,
-                    // ),
+                    child:Icon(Icons.person),
+                 
                   ),
                   SizedBox(width: 0.1.w),
                   Text(
@@ -87,7 +86,7 @@ class _MenuState extends State<Menu> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
+            label: 'Schedule',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),

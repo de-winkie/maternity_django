@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:maternity/constant.dart';
 import 'package:maternity/pages/menu.dart';

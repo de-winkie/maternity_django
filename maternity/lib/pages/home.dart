@@ -1,5 +1,8 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:maternity/constant.dart';
 import 'dart:convert';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'schedule_details.dart'; // Import the ScheduleDetails page
@@ -13,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  dynamic ScheduleId;
   String scheduleName = 'Loading...';
   int remainingDays = 0;
   int leftDays = 0;
@@ -24,16 +28,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchScheduleData() async {
-    final response = await http.get(Uri.parse('http://192.168.219.212:8000/schedule/schedule-latest/${widget.userId}/'));
+    final response = await http.get(Uri.parse('$api/schedule/schedule-latest/${widget.userId}/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final scheduleDateFrom = DateTime.parse(data['scheduleDateFrom']);
       final scheduleDateTo = DateTime.parse(data['scheduleDateTo']);
       final now = DateTime.now();
-
+print(data);
       setState(() {
         scheduleName = data['scheduleName'] ?? 'No Name';
+        ScheduleId =data['id'];
         remainingDays = scheduleDateFrom.difference(now).inDays;
         leftDays = scheduleDateTo.difference(now).inDays;
       });
@@ -78,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ScheduleDetails(scheduleId: 1), // Pass the actual scheduleId here
+                    builder: (context) => ScheduleDetails(scheduleId: ScheduleId),
                   ),
                 );
               },
@@ -134,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: 'Remain day: ',
+                                text: 'Past day: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
@@ -152,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 0.8.h),
                             RichText(
                               text: TextSpan(
-                                text: 'Left day: ',
+                                text: 'Remain day: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-var api='http://192.168.1.203:8000/';
+var api='http://192.168.54.212:8000/';
 const Color kPrimaryColor = Color(0xFF4CB0E4);
 const Color kWhiteColor = Color(0xFFFFFFFF);
 const Color kBlackColor = Color(0xFF000000);
